@@ -2,24 +2,39 @@
 
 {% block content %}
 
-<label for="inputUrl" class="form-label">Video Url</label>
-<input type="text" id="inputVideoUrl" class="form-control" aria-labelledby="videoUrl">
-<div id="videoUrl" class="form-text">
-  Ingrese el url del video
+<div class="card text-bg-dark card-custom-download">
+  <img src="{{url_for('static', filename='../static/img/fondito.png')}}" class="card-img background" alt="...">
+  <div class="card-img-overlay">
+    <div class="mb-3">
+      <label for="inputUrl" class="form-label">Video Url</label>
+      <input type="text" id="inputVideoUrl" class="form-control" aria-labelledby="videoUrl">
+      <div id="videoUrl" class="form-text text-white">
+        Ingrese el url del video
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="formGroupExampleInput2" class="form-label">Formato</label>
+      <select id="selectFormat" class="form-select" aria-label="Default select example" disabled>
+      </select>
+    </div>
+
+    <button type="button" id="btnGetFilters" class="btn btn-info">Obtener filtros</button>
+    <button type="button" id="btnDownload" class="btn btn-success">Descargar</button>
+
+    <div id="error" class="mb-3" hidden>
+      <div class="alert alert-danger" role="alert">
+      </div>
+    </div>
+    <div id="loading" class="mb-3 loading" hidden>
+      <div class="position-relative">
+        <div class="position-absolute top-50 start-50 translate-middle">
+          <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+          <span class="sr-only">Loading wait...</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- <select id="selectTypes" class="form-select" aria-label="Default select example">
-  <option selected value="1">Video</option>
-  <option value="0">Audio</option>
-</select> -->
 
-<select id="selectFormat" class="form-select" aria-label="Default select example">
-  <option selected>seleccione formato</option>
-</select>
-
-<button type="button" id="btnGetFilters">Obtener filtros</button>
-<button type="button" id="btnDownload">Descargar</button>
-
-
-
-{%endblock%}
+{% endblock %}

@@ -1,10 +1,26 @@
+const inputUrl = document.getElementById('inputVideoUrl');
+const selectFormat = document.getElementById('selectFormat');
 const btnFilters = document.getElementById('btnGetFilters');
 const btnDownload = document.getElementById('btnDownload');
+const listError = document.getElementById('error');
+const loading = document.getElementById('loading');
 
 let  inputVideoUrl = '';
 
+document.addEventListener("DOMContentLoaded", function(event) {
+    // Aquí puedes agregar el código que deseas ejecutar cuando la página esté lista.
+    btnDownload.setAttribute('hidden', true);
+    listError.setAttribute('hidden', true);
+    selectFormat.setAttribute('disabled', true);
+    loading.setAttribute('hidden', true);
+
+  });
+  
+
 btnFilters.addEventListener('click', ()=>{
-    inputVideoUrl = document.getElementById('inputVideoUrl').value;
+    inputVideoUrl = inputUrl.value;
+
+    loading.removeAttribute('hidden');
 
     fetch('/getFilters', {
         method:'POST',
@@ -19,9 +35,9 @@ btnFilters.addEventListener('click', ()=>{
     .then(data =>{
         let result = JSON.parse(data);
 
-        console.log('datos',result.data);
+        loading.setAttribute('hidden', true);
 
-        const selectFormat = document.getElementById('selectFormat')
+        console.log('datos',result.data);
 
         selectFormat.innerHTML='';
 
@@ -32,10 +48,10 @@ btnFilters.addEventListener('click', ()=>{
             let texto = ''
 
             if(element.type=="audio"){
-                texto = `${element.type} | ${element.desc} | ${element.mime_type} | ${element.abr}`
+                texto = `${element.type} || ${element.subtype} || ${element.desc} || ${element.mime_type} || ${element.abr}`
             }
             else{
-                texto = `${element.type} | ${element.desc} | ${element.mime_type} | ${element.res}`
+                texto = `${element.type} || ${element.subtype} || ${element.desc} || ${element.mime_type} || ${element.res}`
             }
 
             option.innerText = texto;
@@ -43,23 +59,24 @@ btnFilters.addEventListener('click', ()=>{
             selectFormat.appendChild(option);
         });
 
-        /*
-        {
-            "itag": 139,
-            "mime_type": "audio/mp4",
-            "res": null,
-            "subtype": "mp4",
-            "type": "audio"
-            },
-        */
-
+        btnDownload.removeAttribute('hidden');
+        selectFormat.removeAttribute('disabled');
+       
     })
-    .catch(error => console.error(error));
+    .catch(error => {
+        console.error(error)
+        btnDownload.setAttribute('hidden', true);
+        selectFormat.setAttribute('disabled', 'disabled');
+        loading.setAttribute('hidden', true);
+        listError.removeAttribute('hidden').text = error;
+    });
 });
 
 
 btnDownload.addEventListener('click', ()=>{
-    const itag = document.getElementById('selectFormat').value;
+    const itag = selectFormat.value;
+
+    loading.removeAttribute('hidden');
 
     fetch('/download',{
         method:'POST',
@@ -71,7 +88,30 @@ btnDownload.addEventListener('click', ()=>{
             itag
         })
     })
-    .then(response => response.text())
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+    .then(response => response.blob())
+    .then(data =>{
+        const url = window.URL.createObjectURL(data);
+        
+        let option = selectFormat.options[selectFormat.selectedIndex].text;
+        let parts = option.split('||')
+
+        const subtype = parts[1].trim();
+        const name = parts[2].trim();
+
+        let a = document.createElement('a')
+        a.href = url;
+        a.download = `${name}.${subtype}`;
+
+        a.click();
+        
+        loading.setAttribute('hidden', true);
+
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(error =>
+        {
+            console.error(error)
+            loading.setAttribute('hidden', true);
+            listError.removeAttribute('hidden').text = error;
+        });
 });

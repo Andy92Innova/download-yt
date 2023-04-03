@@ -1,1 +1,19 @@
 
+.background{
+    height: 50vh;
+    opacity: 0.6;
+}
+
+.nav-custom{
+    font-size: 1.5rem !important;
+    font-family: cursive;
+}
+
+.card-custom-download{
+    margin-right: 15%;
+    margin-left: 15%;
+}
+
+.loading .position-relative{
+    height: 3rem;
+}
