@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<label for="inputUrl" class="form-label">Video Url</label>
+<input type="text" id="inputVideoUrl" class="form-control" aria-labelledby="videoUrl">
+<div id="videoUrl" class="form-text">
+  Ingrese el url del video
+</div>
+
+<!-- <select id="selectTypes" class="form-select" aria-label="Default select example">
+  <option selected value="1">Video</option>
+  <option value="0">Audio</option>
+</select> -->
+
+<select id="selectFormat" class="form-select" aria-label="Default select example">
+  <option selected>seleccione formato</option>
+</select>
+
+<button type="button" id="btnGetFilters">Obtener filtros</button>
+<button type="button" id="btnDownload">Descargar</button>
+
+
+
+{%endblock%}
