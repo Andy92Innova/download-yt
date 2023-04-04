@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="card text-bg-dark card-custom-download">
-  <img src="{{url_for('static', filename='../static/img/fondito.png')}}" class="card-img background" alt="...">
+  <img src="{{url_for('static', filename='img/fondito.png')}}" class="card-img background" alt="...">
   <div class="card-img-overlay">
     <div class="mb-3">
       <label for="inputUrl" class="form-label">Video Url</label>
@@ -38,3 +38,7 @@
 
 
 {% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/main.js')}}"></script>
+{% enblock %}

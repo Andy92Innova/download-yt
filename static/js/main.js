@@ -1,115 +1,114 @@
-const inputUrl = document.getElementById('inputVideoUrl');
-const selectFormat = document.getElementById('selectFormat');
-const btnFilters = document.getElementById('btnGetFilters');
-const btnDownload = document.getElementById('btnDownload');
-const listError = document.getElementById('error');
-const loading = document.getElementById('loading');
+let inputUrl = document.getElementById('inputVideoUrl');
+let selectFormat = document.getElementById('selectFormat');
+let btnFilters = document.getElementById('btnGetFilters');
+let btnDownload = document.getElementById('btnDownload');
+let listError = document.getElementById('error');
+let loading = document.getElementById('loading');
 
-let  inputVideoUrl = '';
+let inputVideoUrl = '';
 
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", function (event) {
     // Aquí puedes agregar el código que deseas ejecutar cuando la página esté lista.
     btnDownload.setAttribute('hidden', true);
     listError.setAttribute('hidden', true);
     selectFormat.setAttribute('disabled', true);
     loading.setAttribute('hidden', true);
 
-  });
-  
+});
 
-btnFilters.addEventListener('click', ()=>{
+
+btnFilters.addEventListener('click', () => {
     inputVideoUrl = inputUrl.value;
 
     loading.removeAttribute('hidden');
 
     fetch('/getFilters', {
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json'
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            url:inputVideoUrl
+            url: inputVideoUrl
         })
-    })  
-    .then(response => response.text())
-    .then(data =>{
-        let result = JSON.parse(data);
-
-        loading.setAttribute('hidden', true);
-
-        console.log('datos',result.data);
-
-        selectFormat.innerHTML='';
-
-        result.data.forEach(element => {
-            let option = document.createElement('option')
-            option.setAttribute('value',element.itag);
-
-            let texto = ''
-
-            if(element.type=="audio"){
-                texto = `${element.type} || ${element.subtype} || ${element.desc} || ${element.mime_type} || ${element.abr}`
-            }
-            else{
-                texto = `${element.type} || ${element.subtype} || ${element.desc} || ${element.mime_type} || ${element.res}`
-            }
-
-            option.innerText = texto;
-
-            selectFormat.appendChild(option);
-        });
-
-        btnDownload.removeAttribute('hidden');
-        selectFormat.removeAttribute('disabled');
-       
     })
-    .catch(error => {
-        console.error(error)
-        btnDownload.setAttribute('hidden', true);
-        selectFormat.setAttribute('disabled', 'disabled');
-        loading.setAttribute('hidden', true);
-        listError.removeAttribute('hidden').text = error;
-    });
+        .then(response => response.text())
+        .then(data => {
+            let result = JSON.parse(data);
+
+            loading.setAttribute('hidden', true);
+
+            console.log('datos', result.data);
+
+            selectFormat.innerHTML = '';
+
+            result.data.forEach(element => {
+                let option = document.createElement('option')
+                option.setAttribute('value', element.itag);
+
+                let texto = ''
+
+                if (element.type == "audio") {
+                    texto = `${element.type} || ${element.subtype} || ${element.desc} || ${element.mime_type} || ${element.abr}`
+                }
+                else {
+                    texto = `${element.type} || ${element.subtype} || ${element.desc} || ${element.mime_type} || ${element.res}`
+                }
+
+                option.innerText = texto;
+
+                selectFormat.appendChild(option);
+            });
+
+            btnDownload.removeAttribute('hidden');
+            selectFormat.removeAttribute('disabled');
+
+        })
+        .catch(error => {
+            console.error(error)
+            btnDownload.setAttribute('hidden', true);
+            selectFormat.setAttribute('disabled', 'disabled');
+            loading.setAttribute('hidden', true);
+            listError.removeAttribute('hidden').text = error;
+        });
 });
 
 
-btnDownload.addEventListener('click', ()=>{
+btnDownload.addEventListener('click', () => {
     const itag = selectFormat.value;
 
     loading.removeAttribute('hidden');
 
-    fetch('/download',{
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json'
+    fetch('/download', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            url:inputVideoUrl,
+            url: inputVideoUrl,
             itag
         })
     })
-    .then(response => response.blob())
-    .then(data =>{
-        const url = window.URL.createObjectURL(data);
-        
-        let option = selectFormat.options[selectFormat.selectedIndex].text;
-        let parts = option.split('||')
+        .then(response => response.blob())
+        .then(data => {
+            const url = window.URL.createObjectURL(data);
 
-        const subtype = parts[1].trim();
-        const name = parts[2].trim();
+            let option = selectFormat.options[selectFormat.selectedIndex].text;
+            let parts = option.split('||')
 
-        let a = document.createElement('a')
-        a.href = url;
-        a.download = `${name}.${subtype}`;
+            const subtype = parts[1].trim();
+            const name = parts[2].trim();
 
-        a.click();
-        
-        loading.setAttribute('hidden', true);
+            let a = document.createElement('a')
+            a.href = url;
+            a.download = `${name}.${subtype}`;
 
-        window.URL.revokeObjectURL(url);
-    })
-    .catch(error =>
-        {
+            a.click();
+
+            loading.setAttribute('hidden', true);
+
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
             console.error(error)
             loading.setAttribute('hidden', true);
             listError.removeAttribute('hidden').text = error;

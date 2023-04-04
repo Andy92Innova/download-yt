@@ -1,8 +1,54 @@
-<div class="card" style="width: 18rem;">
-    <img src="..." class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="mx-auto p-2">
+  <div class="card mb-3" >
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="{{url_for('static', filename='img/paypal1.png')}}" class="card-img-top" alt="..." style="height: 100%">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">Tu apoyo ayudará a mantener la aplicación en linea</h5>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+            <label class="form-check-label" for="flexRadioDefault1">
+              <i class="fa fa-usd" aria-hidden="true"></i>1
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+            <label class="form-check-label" for="flexRadioDefault1">
+              <i class="fa fa-usd" aria-hidden="true"></i>5
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" checked>
+            <label class="form-check-label" for="flexRadioDefault3">
+              <i class="fa fa-usd" aria-hidden="true"></i>10
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4" checked>
+            <label class="form-check-label" for="flexRadioDefault4">
+              <i class="fa fa-usd" aria-hidden="true"></i>Otro monto
+            </label>
+            <input class="form-control" type="numeric" id="inputMore" style="width: 10rem">
+          </div>
+          <p class="card-text">
+            En este momento la aplicación se encuentra en proceso de pruebas. Gracias por tu comprención.
+          </p>
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="button"><i class="fa fa-paypal" aria-hidden="true"></i>Donar</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{url_for('static', filename="js/pay.js")}}"></script>
+{% endblock%}
