@@ -77,9 +77,9 @@ def downloadObjeto():
         # Si se produce un error, lanzamos una excepción HTTPException
         raise HTTPException(status_code=500, description="No se pudo descargar el video")
     
-@app.route('/helppay')
-def helppay():
-    return render_template('donar.html')
+# @app.route('/helppay')
+# def helppay():
+#     return render_template('donar.html')
 
 
 if __name__ == '__main__':
